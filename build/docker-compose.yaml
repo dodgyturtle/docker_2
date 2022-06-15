@@ -1,0 +1,17 @@
+version: '3'
+services:
+  backend:
+    image: sas/backend
+    build: ./backend
+    volumes:
+      - ../run/nginx/frontend:/opt/frontend
+
+
+  frontend:
+    image: sas/frontend
+    platform: linux/amd64
+    build: ./frontend
+
+    volumes:
+      - ../run/nginx/frontend:/opt/frontend
+

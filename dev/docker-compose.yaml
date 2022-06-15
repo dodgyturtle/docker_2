@@ -1,0 +1,30 @@
+version: '3'
+services:
+  backend:
+    image: sas/backend
+
+    ports:
+      - "0.0.0.0:8000:8000"
+
+    env_file:
+      - .env
+    
+    volumes:
+      - ./star-burger/:/opt/star-burger
+      - ./media/:/opt/star-burger/media
+      - ./db.sqlite3/:/opt/star-burger/db.sqlite3
+
+    command: python manage.py runserver 0.0.0.0:8000
+
+  frontend:
+    platform: linux/amd64
+    image: node:16
+    
+    volumes:
+      - ./star-burger/:/opt/star-burger
+    
+    working_dir: /opt/star-burger
+
+
+
+    command: bash -c " apt update && apt install -y git python3 make gcc g++ build-essential && rm -rf /var/lib/apt/lists/* && npm install --include=dev && npm install -g parcel@latest  && parcel watch bundles-src/index.js --dist-dir bundles --public-url="./""

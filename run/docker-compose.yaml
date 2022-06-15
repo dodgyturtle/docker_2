@@ -1,0 +1,49 @@
+version: '3'
+services:
+
+  nginx:
+    image: nginx
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    volumes:
+      - ./nginx/frontend:/opt/frontend
+      - ./nginx/media:/opt/media
+      - ./nginx/sites-enabled:/etc/nginx/sites-enabled/
+      - ./nginx/conf.d:/etc/nginx/conf.d/
+
+    env_file:
+      - .env
+    depends_on:
+      - backend
+
+
+  backend:
+    image: sas/backend
+
+    expose:
+      - "8080"
+
+    ports:
+      - "8080:8080"
+
+    env_file:
+      - .env
+
+    depends_on:
+      - postgres
+
+    command: gunicorn -b 0.0.0.0:8080 star_burger.wsgi:application
+
+  postgres:
+    image: postgres
+    expose:
+      - "5432"
+
+    env_file:
+        - .env
+
+    volumes:
+      - ./db/backup.sql:/docker-entrypoint-initdb.d/backup.sql
+      - ./db/data:/var/lib/postgresql/data

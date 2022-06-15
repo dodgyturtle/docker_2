@@ -1,0 +1,6 @@
+/run/.db/
+/run/db/
+/run/nginx/media
+/run/nginx/frontend
+/dev/media/
+/dev/db.sqlite3
